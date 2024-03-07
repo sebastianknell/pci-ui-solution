@@ -1,6 +1,6 @@
 import NeoGrid from './Grid';
 import styles from './App.module.css'
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const App = () => {
   const title = "Near-Earth Object Overview";

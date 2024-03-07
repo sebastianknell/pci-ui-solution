@@ -1,8 +1,11 @@
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import { AgGridEvent, ColDef, RowNode } from "ag-grid-community";
 import data from "./near-earth-asteroids.json";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import { useCallback, useState } from "react";
+import { objectArrayToTsv } from "./utils";
+import styles from './Grid.module.css'
 
 const numberComparator = (str1: string, str2: string) => {
   if (str1 === undefined) return -1;
@@ -128,15 +131,38 @@ const columnDefs: ColDef[] = [
     },
 ];
 
+async function copyData(data: any[]) {
+  const tsv = objectArrayToTsv(data);
+  try {
+      await navigator.clipboard.writeText(tsv);
+      console.log("Text copied to clipboard");
+  } catch (err) {
+      console.error("Failed to copy: ", err);
+  }
+}
+
 const NeoGrid = (): JSX.Element => {
+  const [selectedData, setSelectedData] = useState<any[]>([]);
+
+  const onRowsSelectionChanged = useCallback((event: AgGridEvent) => {
+    const rows = event.api.getSelectedNodes().map((rowNode: RowNode) => rowNode.data);
+    setSelectedData(rows);
+  }, []);
+
   return (
+    <>
+    <button className={styles.button} onClick={async () => copyData(selectedData)} disabled={selectedData.length === 0}>Copy selected data</button>
     <div className="ag-theme-alpine" style={{ height: 900, width: 1920 }}>
       <AgGridReact
         rowData={data}
         columnDefs={columnDefs}
         rowGroupPanelShow={'always'}
+        enableRangeSelection={true}
+        rowSelection="multiple"
+        onSelectionChanged={onRowsSelectionChanged}
       />
     </div>
+    </>
   );
 };
 
