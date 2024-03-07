@@ -26,8 +26,8 @@ const columnDefs: ColDef[] = [
         filter: true,
     },
     {
-        field: "discovery_date",
         headerName: "Discovery Date",
+        valueGetter: (params) => new Date(params.data.discovery_date).toLocaleDateString(),
         sortable: true,
         comparator: dateComparator,
     },
