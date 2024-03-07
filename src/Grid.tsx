@@ -24,10 +24,14 @@ const columnDefs: ColDef[] = [
         headerName: "Designation",
         sortable: true,
         filter: true,
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
     {
         headerName: "Discovery Date",
-        valueGetter: (params) => new Date(params.data.discovery_date).toLocaleDateString(),
+        valueGetter: (params) =>
+            new Date(params.data.discovery_date).toLocaleDateString(),
         sortable: true,
         comparator: dateComparator,
     },
@@ -37,6 +41,9 @@ const columnDefs: ColDef[] = [
         sortable: true,
         comparator: numberComparator,
         filter: "agNumberColumnFilter",
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
     {
         field: "moid_au",
@@ -44,6 +51,9 @@ const columnDefs: ColDef[] = [
         sortable: true,
         comparator: numberComparator,
         filter: "agNumberColumnFilter",
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
     {
         field: "q_au_1",
@@ -51,6 +61,9 @@ const columnDefs: ColDef[] = [
         sortable: true,
         comparator: numberComparator,
         filter: "agNumberColumnFilter",
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
     {
         field: "q_au_2",
@@ -58,6 +71,9 @@ const columnDefs: ColDef[] = [
         sortable: true,
         comparator: numberComparator,
         filter: "agNumberColumnFilter",
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
     {
         field: "period_yr",
@@ -65,6 +81,9 @@ const columnDefs: ColDef[] = [
         sortable: true,
         comparator: numberComparator,
         filter: "agNumberColumnFilter",
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
     {
         field: "i_deg",
@@ -72,12 +91,30 @@ const columnDefs: ColDef[] = [
         sortable: true,
         comparator: numberComparator,
         filter: "agNumberColumnFilter",
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
     {
-        field: "pha",
+        // field: "pha",
         headerName: "Potentially Hazardous",
+        valueGetter: (params) => {
+            switch (params.data.pha) {
+                case "Y":
+                    return "Yes";
+                case "N":
+                    return "No";
+                case "n/a":
+                    return "";
+                default:
+                    return "";
+            }
+        },
         sortable: true,
         filter: true,
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
     {
         field: "orbit_class",
@@ -85,6 +122,9 @@ const columnDefs: ColDef[] = [
         enableRowGroup: true,
         sortable: true,
         filter: true,
+        filterParams: {
+            buttons: ["reset", "apply"],
+        },
     },
 ];
 
