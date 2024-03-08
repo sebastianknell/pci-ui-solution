@@ -1,10 +1,20 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+.title {
+    display: inline-block;
+    margin-right: 15px;
+}
+
 .button {
     font-size: large;
     background-color: #3d7ef7;
     padding: 10px;
     color: white;
     border-radius: 5px;
-    margin-bottom: 1rem;
     border: none;
     cursor: pointer;
 }

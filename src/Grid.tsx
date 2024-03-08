@@ -3,7 +3,7 @@ import { AgGridEvent, ColDef, RowNode } from "ag-grid-community";
 import data from "./near-earth-asteroids.json";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { objectArrayToTsv } from "./utils";
 import styles from './Grid.module.css'
 
@@ -142,27 +142,54 @@ async function copyData(data: any[]) {
 }
 
 const NeoGrid = (): JSX.Element => {
+  const title = "Near-Earth Object Overview";
+  const gridRef = useRef<any>();
   const [selectedData, setSelectedData] = useState<any[]>([]);
+
+  useEffect(() => {
+      document.title = title;
+  }, []);
 
   const onRowsSelectionChanged = useCallback((event: AgGridEvent) => {
     const rows = event.api.getSelectedNodes().map((rowNode: RowNode) => rowNode.data);
     setSelectedData(rows);
   }, []);
 
+  const clearFilters = useCallback(() => {
+      gridRef.current.api.setFilterModel(null);
+      gridRef.current.api.setDefaultColDef({
+        sort: null
+      });
+  }, []);
+
   return (
-    <>
-    <button className={styles.button} onClick={async () => copyData(selectedData)} disabled={selectedData.length === 0}>Copy selected data</button>
-    <div className="ag-theme-alpine" style={{ height: 900, width: 1920 }}>
-      <AgGridReact
-        rowData={data}
-        columnDefs={columnDefs}
-        rowGroupPanelShow={'always'}
-        enableRangeSelection={true}
-        rowSelection="multiple"
-        onSelectionChanged={onRowsSelectionChanged}
-      />
-    </div>
-    </>
+      <>
+          <div className={styles.navbar}>
+              <h1 className={styles.title}>{title}</h1>
+              <button className={styles.button}
+              onClick={clearFilters}
+              >Clear Filters and Sorters</button>
+          </div>
+          <button
+              className={styles.button}
+              style={{marginBottom: "1rem"}}
+              onClick={async () => copyData(selectedData)}
+              disabled={selectedData.length === 0}
+          >
+              Copy selected data
+          </button>
+          <div className="ag-theme-alpine" style={{ height: 900, width: 1920 }}>
+              <AgGridReact
+                  ref={gridRef}
+                  rowData={data}
+                  columnDefs={columnDefs}
+                  rowGroupPanelShow={"always"}
+                  rowSelection="multiple"
+                  onSelectionChanged={onRowsSelectionChanged}
+                  onGridReady={() => {console.log('grid ready')}}
+              />
+          </div>
+      </>
   );
 };
 
